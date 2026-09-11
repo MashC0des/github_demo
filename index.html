@@ -3,23 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MashCodes | 3D Interactive Portfolio</title>
-  <!-- Google Fonts & Font Awesome Icons -->
+  <title>MashCodes | Studio Portfolio</title>
+  
+  <!-- Typography & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root {
-      --bg: #070913;
-      --card-bg: rgba(18, 22, 40, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-cyan: #00f2fe;
-      --accent-violet: #892cdc;
-      --accent-pink: #fe019a;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
+      --bg-dark: #09090b;
+      --bg-surface: rgba(22, 22, 27, 0.72);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-amber: rgba(245, 158, 11, 0.35);
+      --amber-main: #f59e0b;
+      --amber-bright: #fbbf24;
+      --ember: #ea580c;
+      --text-pure: #ffffff;
+      --text-muted: #a1a1aa;
     }
 
     * {
@@ -29,14 +31,14 @@
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-pure);
+      font-family: 'Outfit', sans-serif;
       overflow-x: hidden;
       line-height: 1.6;
     }
 
-    /* 3D WebGL Canvas Layer */
+    /* Fullscreen 3D WebGL Canvas */
     #canvas-container {
       position: fixed;
       top: 0;
@@ -47,18 +49,31 @@
       pointer-events: none;
     }
 
-    /* Ambient Glow Spots */
-    .ambient-glow {
+    /* Ambient Warm Glow Gradients */
+    .glow-amber {
       position: fixed;
-      width: 450px;
-      height: 450px;
+      width: 600px;
+      height: 600px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(137, 44, 220, 0.25) 0%, transparent 70%);
-      filter: blur(60px);
-      z-index: -1;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 65%);
+      filter: blur(80px);
+      z-index: -2;
       pointer-events: none;
-      top: 10%;
-      left: 60%;
+      top: 20%;
+      right: 5%;
+    }
+
+    .glow-ember {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(234, 88, 12, 0.09) 0%, transparent 70%);
+      filter: blur(90px);
+      z-index: -2;
+      pointer-events: none;
+      bottom: 5%;
+      left: 10%;
     }
 
     /* Navigation */
@@ -69,31 +84,32 @@
       padding: 24px 8%;
       position: sticky;
       top: 0;
-      backdrop-filter: blur(16px);
-      background: rgba(7, 9, 19, 0.7);
-      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      background: rgba(9, 9, 11, 0.75);
+      border-bottom: 1px solid var(--border-subtle);
       z-index: 100;
     }
 
-    .logo {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
+    .brand {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.55rem;
+      font-weight: 900;
       letter-spacing: -0.5px;
+      text-transform: uppercase;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .logo span {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+    .brand span {
+      background: linear-gradient(135deg, var(--amber-bright), var(--ember));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 2.2rem;
       list-style: none;
     }
 
@@ -102,134 +118,136 @@
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
-      transition: color 0.3s;
+      transition: color 0.3s ease;
     }
 
     .nav-links a:hover {
-      color: var(--accent-cyan);
+      color: var(--amber-bright);
     }
 
-    /* Container */
+    /* Layout Container */
     .container {
-      max-width: 1180px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 2rem;
     }
 
     /* Hero Section */
     .hero {
-      min-height: 85vh;
+      min-height: 86vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: flex-start;
-      padding-top: 4rem;
+      padding-top: 3rem;
     }
 
-    .badge {
+    .meta-tag {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 9px;
       padding: 6px 16px;
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      border-radius: 50px;
-      font-size: 0.85rem;
-      color: var(--accent-cyan);
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid var(--border-amber);
+      border-radius: 6px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--amber-bright);
+      margin-bottom: 2rem;
       letter-spacing: 1px;
     }
 
-    .badge-dot {
-      width: 8px;
-      height: 8px;
+    .meta-dot {
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: var(--accent-cyan);
-      box-shadow: 0 0 10px var(--accent-cyan);
+      background: var(--amber-bright);
+      box-shadow: 0 0 8px var(--amber-main);
     }
 
     .hero h1 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.8rem, 6vw, 4.8rem);
-      line-height: 1.1;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
+      font-size: clamp(3rem, 6.5vw, 5.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      margin-bottom: 1.8rem;
     }
 
-    .gradient-text {
-      background: linear-gradient(135deg, #ffffff 30%, var(--accent-cyan) 75%, var(--accent-violet) 100%);
+    .solar-gradient {
+      background: linear-gradient(135deg, #ffffff 40%, var(--amber-bright) 75%, var(--ember) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--text-muted);
-      max-width: 620px;
-      margin-bottom: 2.5rem;
+      max-width: 580px;
+      margin-bottom: 2.8rem;
+      font-weight: 300;
     }
 
-    .cta-group {
+    .btn-row {
       display: flex;
-      gap: 1rem;
+      gap: 1.2rem;
       flex-wrap: wrap;
     }
 
     .btn {
-      padding: 14px 28px;
-      border-radius: 12px;
+      padding: 14px 30px;
+      border-radius: 8px;
       font-weight: 600;
       text-decoration: none;
       font-size: 0.95rem;
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      transition: all 0.25s ease;
       cursor: pointer;
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
-      color: #05060d;
-      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.25);
+    .btn-solid {
+      background: linear-gradient(135deg, var(--amber-bright), var(--ember));
+      color: #0d0d11;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.4);
+    .btn-solid:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 35px rgba(245, 158, 11, 0.4);
     }
 
-    .btn-glass {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
-      backdrop-filter: blur(10px);
+    .btn-outline {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-pure);
+      backdrop-filter: blur(12px);
     }
 
-    .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-3px);
+    .btn-outline:hover {
+      border-color: var(--border-amber);
+      transform: translateY(-2px);
     }
 
-    /* Section Titles */
-    .section-header {
-      text-align: center;
-      margin: 6rem 0 3.5rem;
+    /* Section Headers */
+    .section-title {
+      margin: 8rem 0 3.5rem;
     }
 
-    .section-header h2 {
-      font-family: 'Space Grotesk', sans-serif;
+    .section-title h2 {
       font-size: 2.2rem;
-      margin-bottom: 0.5rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
 
-    .section-header p {
+    .section-title p {
       color: var(--text-muted);
+      margin-top: 6px;
     }
 
-    /* 3D Tilt Card Grid */
-    .grid {
+    /* 3D Tilt Cards (Obsidian Chrome Edition) */
+    .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2rem;
@@ -237,361 +255,406 @@
     }
 
     .card-3d {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 2rem;
+      background: linear-gradient(160deg, rgba(30, 30, 38, 0.6) 0%, rgba(15, 15, 20, 0.8) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 2.2rem;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.15s ease-out, border-color 0.3s;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
       cursor: pointer;
     }
 
     .card-3d:hover {
-      border-color: rgba(0, 242, 254, 0.4);
+      border-color: var(--border-amber);
+      box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.12);
     }
 
-    .card-content {
-      transform: translateZ(35px);
+    .card-inner {
+      transform: translateZ(40px);
     }
 
-    .card-icon {
-      width: 54px;
-      height: 54px;
-      background: rgba(0, 242, 254, 0.1);
-      border-radius: 14px;
+    .card-badge-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid var(--border-amber);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      color: var(--accent-cyan);
-      margin-bottom: 1.5rem;
-      border: 1px solid rgba(0, 242, 254, 0.2);
+      font-size: 1.3rem;
+      color: var(--amber-bright);
+      margin-bottom: 1.6rem;
     }
 
     .card-3d h3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
     }
 
     .card-3d p {
       color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.6rem;
+      line-height: 1.6;
     }
 
-    .tags {
+    .tag-container {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    .tag {
+    .tag-item {
+      font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
       padding: 4px 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      color: var(--accent-cyan);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      color: var(--amber-main);
     }
 
-    /* Skills Bar / Floating elements */
-    .skills-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+    /* Capabilities / Tech Stack */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
       gap: 1.2rem;
-      margin-top: 1rem;
     }
 
-    .skill-pill {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 12px 24px;
-      border-radius: 50px;
-      font-weight: 500;
+    .stack-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      padding: 1.4rem;
+      border-radius: 12px;
       display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 10px;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
 
-    .skill-pill i {
-      color: var(--accent-cyan);
+    .stack-item i {
+      font-size: 1.8rem;
+      color: var(--amber-bright);
     }
 
-    .skill-pill:hover {
-      transform: translateY(-5px) scale(1.05);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 10px 20px rgba(0, 242, 254, 0.15);
+    .stack-item:hover {
+      border-color: var(--border-amber);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     }
 
     /* Footer */
     footer {
-      margin-top: 8rem;
-      padding: 3rem 0;
-      border-top: 1px solid var(--card-border);
+      margin-top: 9rem;
+      padding: 4rem 0 3rem;
+      border-top: 1px solid var(--border-subtle);
       text-align: center;
       color: var(--text-muted);
       font-size: 0.9rem;
     }
 
-    .socials {
+    .footer-links {
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 1.2rem;
+      gap: 1.8rem;
+      margin-bottom: 1.5rem;
     }
 
-    .socials a {
+    .footer-links a {
       color: var(--text-muted);
-      font-size: 1.2rem;
-      transition: color 0.3s, transform 0.3s;
+      font-size: 1.3rem;
+      transition: color 0.25s ease, transform 0.25s ease;
     }
 
-    .socials a:hover {
-      color: var(--accent-cyan);
-      transform: scale(1.2);
+    .footer-links a:hover {
+      color: var(--amber-bright);
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Canvas for Three.js -->
+  <!-- Three.js 3D Viewport -->
   <div id="canvas-container"></div>
-  <div class="ambient-glow"></div>
+  <div class="glow-amber"></div>
+  <div class="glow-ember"></div>
 
   <!-- Navbar -->
   <nav>
-    <div class="logo">
-      <i class="fa-solid fa-cube" style="color: var(--accent-cyan);"></i>
+    <div class="brand">
+      <i class="fa-solid fa-shapes" style="color: var(--amber-bright);"></i>
       <span>Mash</span>Codes
     </div>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Work</a></li>
-      <li><a href="#skills">Skills</a></li>
+      <li><a href="#about">Overview</a></li>
+      <li><a href="#work">Selected Work</a></li>
+      <li><a href="#stack">Capabilities</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
 
-  <main class="container">
+  <div class="container">
     <!-- Hero Section -->
     <section class="hero" id="about">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        Interactive Digital Experiences
+      <div class="meta-tag">
+        <span class="meta-dot"></span>
+        SYSTEM ARCHITECTURE &amp; IMMERSIVE WEB
       </div>
       <h1>
-        Building immersive &amp; <br />
-        <span class="gradient-text">high-performance</span> web apps.
+        Engineered for speed.<br />
+        <span class="solar-gradient">Designed in 3D.</span>
       </h1>
       <p>
-        Hi, I'm the developer behind <strong>MashCodes</strong>. I turn complex logic into smooth, responsive, and visually dynamic digital products.
+        I'm the creator behind <strong>MashCodes</strong>. Building scalable web platforms, high-throughput architectures, and engaging WebGL interfaces.
       </p>
-      <div class="cta-group">
-        <a href="#projects" class="btn btn-primary">
+      <div class="btn-row">
+        <a href="#work" class="btn btn-solid">
           Explore Projects <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <a href="#contact" class="btn btn-glass">
-          Get in Touch <i class="fa-solid fa-paper-plane"></i>
+        <a href="#contact" class="btn btn-outline">
+          Connect <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
       </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects">
-      <div class="section-header">
-        <h2>Featured Projects</h2>
-        <p>Interactive cards with 3D tilt effects</p>
+    <!-- Work / Projects Section -->
+    <section id="work">
+      <div class="section-title">
+        <h2>Selected Engineering</h2>
+        <p>3D dynamic tilt inspection on interactive cards</p>
       </div>
 
-      <div class="grid">
+      <div class="cards-grid">
         <!-- Project 1 -->
         <div class="card-3d" data-tilt>
-          <div class="card-content">
-            <div class="card-icon">
-              <i class="fa-solid fa-layer-group"></i>
+          <div class="card-inner">
+            <div class="card-badge-icon">
+              <i class="fa-solid fa-microchip"></i>
             </div>
-            <h3>Cloud Analytics Platform</h3>
-            <p>Real-time analytics engine processing streaming metrics, custom dashboards, and high-frequency data pipelines.</p>
-            <div class="tags">
-              <span class="tag">React</span>
-              <span class="tag">Node.js</span>
-              <span class="tag">PostgreSQL</span>
-              <span class="tag">Docker</span>
+            <h3>Distributed Stream Engine</h3>
+            <p>High-concurrency data ingestion processing multi-channel event loops and telemetry at microsecond intervals.</p>
+            <div class="tag-container">
+              <span class="tag-item">Go</span>
+              <span class="tag-item">Kafka</span>
+              <span class="tag-item">Redis</span>
+              <span class="tag-item">Docker</span>
             </div>
           </div>
         </div>
 
         <!-- Project 2 -->
         <div class="card-3d" data-tilt>
-          <div class="card-content">
-            <div class="card-icon">
-              <i class="fa-solid fa-cubes"></i>
+          <div class="card-inner">
+            <div class="card-badge-icon">
+              <i class="fa-solid fa-cubes-stacked"></i>
             </div>
-            <h3>3D Product Visualizer</h3>
-            <p>Browser-based 3D configurator with dynamic materials, shadow mapping, and responsive controls.</p>
-            <div class="tags">
-              <span class="tag">Three.js</span>
-              <span class="tag">WebGL</span>
-              <span class="tag">GSAP</span>
-              <span class="tag">Tailwind</span>
+            <h3>Realtime 3D Scene Configurator</h3>
+            <p>GPU-accelerated procedural scene builder with volumetric lighting, PBR materials, and real-time mesh instancing.</p>
+            <div class="tag-container">
+              <span class="tag-item">Three.js</span>
+              <span class="tag-item">WebGL 2.0</span>
+              <span class="tag-item">GLSL Shaders</span>
             </div>
           </div>
         </div>
 
         <!-- Project 3 -->
         <div class="card-3d" data-tilt>
-          <div class="card-content">
-            <div class="card-icon">
-              <i class="fa-solid fa-bolt"></i>
+          <div class="card-inner">
+            <div class="card-badge-icon">
+              <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <h3>Intelligent Workflow API</h3>
-            <p>Automated orchestration engine for multi-tenant microservices and custom webhook ingestion pipelines.</p>
-            <div class="tags">
-              <span class="tag">Python</span>
-              <span class="tag">FastAPI</span>
-              <span class="tag">Redis</span>
-              <span class="tag">AWS</span>
+            <h3>Auth &amp; Gateway Infrastructure</h3>
+            <p>Unified zero-trust API proxy with automated key rotation, JWT claims validation, and granular rate controls.</p>
+            <div class="tag-container">
+              <span class="tag-item">TypeScript</span>
+              <span class="tag-item">PostgreSQL</span>
+              <span class="tag-item">Kubernetes</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills">
-      <div class="section-header">
-        <h2>Tech Stack &amp; Tools</h2>
-        <p>Technologies used to bring ideas to life</p>
+    <!-- Capabilities / Tech Stack -->
+    <section id="stack">
+      <div class="section-title">
+        <h2>Tech &amp; Tooling</h2>
+        <p>Core toolsets leveraged across production applications</p>
       </div>
-      <div class="skills-wrapper">
-        <div class="skill-pill"><i class="fa-brands fa-js"></i> JavaScript / TypeScript</div>
-        <div class="skill-pill"><i class="fa-brands fa-react"></i> React / Next.js</div>
-        <div class="skill-pill"><i class="fa-brands fa-python"></i> Python</div>
-        <div class="skill-pill"><i class="fa-solid fa-cube"></i> Three.js / WebGL</div>
-        <div class="skill-pill"><i class="fa-brands fa-node"></i> Node.js</div>
-        <div class="skill-pill"><i class="fa-solid fa-database"></i> SQL &amp; PostgreSQL</div>
-        <div class="skill-pill"><i class="fa-brands fa-docker"></i> Docker / Cloud</div>
-        <div class="skill-pill"><i class="fa-brands fa-git-alt"></i> Git Architecture</div>
+
+      <div class="stack-grid">
+        <div class="stack-item"><i class="fa-brands fa-react"></i> React / Next.js</div>
+        <div class="stack-item"><i class="fa-brands fa-js"></i> TypeScript</div>
+        <div class="stack-item"><i class="fa-brands fa-python"></i> Python</div>
+        <div class="stack-item"><i class="fa-brands fa-node"></i> Node.js</div>
+        <div class="stack-item"><i class="fa-solid fa-cube"></i> Three.js / WebGL</div>
+        <div class="stack-item"><i class="fa-solid fa-database"></i> PostgreSQL</div>
+        <div class="stack-item"><i class="fa-brands fa-docker"></i> Docker</div>
+        <div class="stack-item"><i class="fa-brands fa-aws"></i> Cloud Infra</div>
       </div>
     </section>
 
-    <!-- Footer / Contact -->
+    <!-- Footer -->
     <footer id="contact">
-      <div class="socials">
+      <div class="footer-links">
         <a href="#" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
         <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-        <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
         <a href="#" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
       </div>
-      <p>&copy; 2026 MashCodes. Built with precision and 3D interactions.</p>
+      <p>&copy; 2026 MashCodes. All rights reserved. Obsidian Ember Theme.</p>
     </footer>
-  </main>
+  </div>
 
-  <!-- Three.js for Interactive 3D Background -->
+  <!-- Three.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
     // -------------------------------------------------------------
-    // 1. Three.js: Interactive 3D Particle Torus Knot Background
+    // 1. Three.js: Shaded 3D Titanium Polyhedron & Orbital Rings
     // -------------------------------------------------------------
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(
-      70,
+      60,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 3.2;
+    camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create a particle mesh based on a Torus Knot
-    const geometry = new THREE.TorusKnotGeometry(1.2, 0.35, 120, 24);
-    
-    // Points material with gradient accent color
-    const material = new THREE.PointsMaterial({
-      size: 0.016,
-      color: 0x00f2fe,
-      transparent: true,
-      opacity: 0.85,
-      blending: THREE.AdditiveBlending
+    // Group for the 3D entity
+    const objectGroup = new THREE.Group();
+    scene.add(objectGroup);
+
+    // Main 3D Metallic Icosahedron
+    const coreGeo = new THREE.IcosahedronGeometry(1.6, 1);
+    const coreMat = new THREE.MeshStandardMaterial({
+      color: 0x222229,
+      roughness: 0.25,
+      metalness: 0.9,
+      wireframe: false,
+      flatShading: true
     });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    objectGroup.add(coreMesh);
 
-    const particles = new THREE.Points(geometry, material);
-    scene.add(particles);
+    // Inner Ember Wireframe Skeleton
+    const wireGeo = new THREE.IcosahedronGeometry(1.63, 1);
+    const wireMat = new THREE.MeshBasicMaterial({
+      color: 0xf59e0b,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.35
+    });
+    const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+    objectGroup.add(wireMesh);
 
-    // Mouse tracking for parallax tilt
+    // Surrounding Orbital Rings
+    const ringGeo = new THREE.TorusGeometry(2.4, 0.02, 16, 100);
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, transparent: true, opacity: 0.4 });
+    const ringMesh1 = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh1.rotation.x = Math.PI / 2.3;
+    objectGroup.add(ringMesh1);
+
+    const ringMesh2 = new THREE.Mesh(ringGeo, ringMat);
+    ringMesh2.rotation.x = Math.PI / 1.4;
+    ringMesh2.rotation.y = Math.PI / 4;
+    objectGroup.add(ringMesh2);
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const amberLight = new THREE.DirectionalLight(0xf59e0b, 3.5);
+    amberLight.position.set(5, 4, 3);
+    scene.add(amberLight);
+
+    const fillLight = new THREE.DirectionalLight(0xea580c, 1.8);
+    fillLight.position.set(-5, -3, -2);
+    scene.add(fillLight);
+
+    // Mouse Interaction for Parallax
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
 
-    window.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     });
 
-    // Handle Window Resize
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Animation Loop
+    // Animate Loop
     const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
+      const elapsed = clock.getElapsedTime();
 
-      // Idle auto-rotation
-      particles.rotation.x = elapsedTime * 0.15;
-      particles.rotation.y = elapsedTime * 0.2;
+      // Idle Rotation
+      coreMesh.rotation.y = elapsed * 0.25;
+      coreMesh.rotation.x = elapsed * 0.15;
+      wireMesh.rotation.y = elapsed * 0.25;
+      wireMesh.rotation.x = elapsed * 0.15;
 
-      // Smooth mouse parallax interpolation
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
+      ringMesh1.rotation.z = elapsed * 0.1;
+      ringMesh2.rotation.z = -elapsed * 0.12;
 
-      particles.rotation.y += targetX * 0.4;
-      particles.rotation.x += targetY * 0.4;
+      // Mouse Lerping
+      currentX += (mouseX - currentX) * 0.05;
+      currentY += (mouseY - currentY) * 0.05;
+
+      objectGroup.rotation.y = currentX * 0.7;
+      objectGroup.rotation.x = -currentY * 0.7;
 
       renderer.render(scene, camera);
     }
     animate();
 
     // -------------------------------------------------------------
-    // 2. Vanilla JS 3D Tilt Effect on Project Cards
+    // 2. 3D Card Hover Tilt Mechanics
     // -------------------------------------------------------------
     const cards = document.querySelectorAll('[data-tilt]');
 
     cards.forEach((card) => {
       card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        const bounds = card.getBoundingClientRect();
+        const x = e.clientX - bounds.left;
+        const y = e.clientY - bounds.top;
 
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+        const centerX = bounds.width / 2;
+        const centerY = bounds.height / 2;
 
-        const rotateX = ((y - centerY) / centerY) * -14;
-        const rotateY = ((x - centerX) / centerX) * 14;
+        const rotateX = ((y - centerY) / centerY) * -12;
+        const rotateY = ((x - centerX) / centerX) * 12;
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
       });
 
       card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
       });
     });
   </script>
